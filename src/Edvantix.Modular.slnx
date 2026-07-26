@@ -1,0 +1,47 @@
+<Solution>
+  <Folder Name="/BuildingBlocks/">
+    <Project Path="BuildingBlocks/Caching/Caching.csproj" />
+    <Project Path="BuildingBlocks/Core/Core.csproj" />
+    <Project Path="BuildingBlocks/Eventing.Abstractions/Eventing.Abstractions.csproj" />
+    <Project Path="BuildingBlocks/Eventing/Eventing.csproj" />
+    <Project Path="BuildingBlocks/Jobs/Jobs.csproj" />
+    <Project Path="BuildingBlocks/Mailing/Mailing.csproj" />
+    <Project Path="BuildingBlocks/Persistence/Persistence.csproj" />
+    <Project Path="BuildingBlocks/Quota/Quota.csproj" />
+    <Project Path="BuildingBlocks/Shared/Shared.csproj" />
+    <Project Path="BuildingBlocks/Storage/Storage.csproj" />
+    <Project Path="BuildingBlocks/Web/Web.csproj" />
+  </Folder>
+  <Folder Name="/Host/">
+    <Project Path="Host/EDV.Starter.Api/EDV.Starter.Api.csproj" />
+    <Project Path="Host/EDV.Starter.DbMigrator/EDV.Starter.DbMigrator.csproj" />
+  </Folder>
+  <Folder Name="/Host/AppHost/">
+    <Project Path="Host/EDV.Starter.AppHost/EDV.Starter.AppHost.csproj" />
+  </Folder>
+  <Folder Name="/Host/Migrations/">
+    <Project Path="Host/EDV.Starter.Migrations.PostgreSQL/EDV.Starter.Migrations.PostgreSQL.csproj" />
+  </Folder>
+  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Auditing/">
+    <Project Path="Modules/Auditing/Modules.Auditing.Contracts/Modules.Auditing.Contracts.csproj" />
+    <Project Path="Modules/Auditing/Modules.Auditing/Modules.Auditing.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Billing/">
+    <Project Path="Modules/Billing/Modules.Billing.Contracts/Modules.Billing.Contracts.csproj" />
+    <Project Path="Modules/Billing/Modules.Billing/Modules.Billing.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Identity/">
+    <Project Path="Modules/Identity/Modules.Identity.Contracts/Modules.Identity.Contracts.csproj" />
+    <Project Path="Modules/Identity/Modules.Identity/Modules.Identity.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Multitenancy/">
+    <Project Path="Modules/Multitenancy/Modules.Multitenancy.Contracts/Modules.Multitenancy.Contracts.csproj" />
+    <Project Path="Modules/Multitenancy/Modules.Multitenancy/Modules.Multitenancy.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+</Solution>
