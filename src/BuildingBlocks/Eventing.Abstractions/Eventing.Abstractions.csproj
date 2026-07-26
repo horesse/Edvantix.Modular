@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>EDV.Framework.Eventing.Abstractions</RootNamespace>
+        <AssemblyName>EDV.Framework.Eventing.Abstractions</AssemblyName>
+        <NoWarn>$(NoWarn);CA1711;CA1716</NoWarn>
+    </PropertyGroup>
+    
+</Project>
