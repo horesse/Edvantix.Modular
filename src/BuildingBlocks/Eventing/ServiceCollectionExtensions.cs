@@ -1,0 +1,113 @@
+using EDV.Framework.Eventing.Abstractions;
+using EDV.Framework.Eventing.Inbox;
+using EDV.Framework.Eventing.InMemory;
+using EDV.Framework.Eventing.Outbox;
+using EDV.Framework.Eventing.RabbitMq;
+using EDV.Framework.Eventing.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Reflection;
+
+namespace EDV.Framework.Eventing;
+
+public static class ServiceCollectionExtensions
+{
+    /// <summary>
+    /// Регистрирует базовые сервисы событийности (сериализатор, шину, настройки).
+    /// </summary>
+    public static IServiceCollection AddEventingCore(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
+
+        services.AddOptions<EventingOptions>().BindConfiguration(nameof(EventingOptions));
+
+        services.AddSingleton<IEventSerializer, JsonEventSerializer>();
+
+        // Контекст арендатора для диспетчеризации событий (по умолчанию no-op; мультиарендность
+        // подставляет сюда Finbuckle-реализацию), чтобы фоновые издатели устанавливали арендатора
+        // до того, как будут построены отфильтрованные по арендатору DbContext'ы обработчиков.
+        services.TryAddSingleton<IEventTenantScope, NullEventTenantScope>();
+
+        // Регистрируем шину событий на основе настроенного провайдера
+        var options = configuration.GetSection(nameof(EventingOptions)).Get<EventingOptions>() ?? new EventingOptions();
+
+        if (string.Equals(options.Provider, "RabbitMQ", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddOptions<RabbitMqOptions>().BindConfiguration("EventingOptions:RabbitMQ");
+            services.AddSingleton<IEventBus, RabbitMqEventBus>();
+        }
+        else
+        {
+            // По умолчанию — InMemory
+            services.AddSingleton<IEventBus, InMemoryEventBus>();
+        }
+
+        // Регистрируем хостед-сервис диспетчера outbox, если он включён
+        if (options.UseHostedServiceDispatcher)
+        {
+            services.AddHostedService<OutboxDispatcherHostedService>();
+        }
+
+        return services;
+    }
+
+    /// <summary>
+    /// Регистрирует основанные на EF Core хранилища outbox и inbox для указанного DbContext.
+    /// </summary>
+    public static IServiceCollection AddEventingForDbContext<TDbContext>(
+        this IServiceCollection services)
+        where TDbContext : DbContext
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddScoped<IOutboxStore, EfCoreOutboxStore<TDbContext>>();
+        services.AddScoped<IInboxStore, EfCoreInboxStore<TDbContext>>();
+        services.AddScoped<OutboxDispatcher>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Регистрирует обработчики интеграционных событий из указанных сборок.
+    /// </summary>
+    public static IServiceCollection AddIntegrationEventHandlers(
+        this IServiceCollection services,
+        params Assembly[] assemblies)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        if (assemblies is null || assemblies.Length == 0)
+        {
+            return services;
+        }
+
+        foreach (var assembly in assemblies)
+        {
+            var handlerTypes = assembly
+                .GetTypes()
+                .Where(t => !t.IsAbstract && !t.IsInterface)
+                .Select(t => new
+                {
+                    Type = t,
+                    Interfaces = t.GetInterfaces()
+                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>))
+                        .ToArray()
+                })
+                .Where(x => x.Interfaces.Length > 0);
+
+            foreach (var handler in handlerTypes)
+            {
+                foreach (var handlerInterface in handler.Interfaces)
+                {
+                    services.AddScoped(handlerInterface, handler.Type);
+                }
+            }
+        }
+
+        return services;
+    }
+}
