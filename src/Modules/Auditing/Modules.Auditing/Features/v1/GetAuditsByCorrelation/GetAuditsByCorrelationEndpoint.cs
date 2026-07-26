@@ -1,0 +1,33 @@
+using EDV.Framework.Shared.Identity.Authorization;
+using EDV.Modules.Auditing.Contracts.Authorization;
+using EDV.Modules.Auditing.Contracts.Dtos;
+using EDV.Modules.Auditing.Contracts.v1.GetAuditsByCorrelation;
+using Mediator;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+
+namespace EDV.Modules.Auditing.Features.v1.GetAuditsByCorrelation;
+
+public static class GetAuditsByCorrelationEndpoint
+{
+    public static RouteHandlerBuilder MapGetAuditsByCorrelationEndpoint(this IEndpointRouteBuilder group)
+    {
+        return group.MapGet(
+                "/by-correlation/{correlationId}",
+                async (string correlationId, DateTime? fromUtc, DateTime? toUtc, IMediator mediator, CancellationToken cancellationToken) =>
+                    TypedResults.Ok(await mediator.Send(new GetAuditsByCorrelationQuery
+                    {
+                        CorrelationId = correlationId,
+                        FromUtc = fromUtc,
+                        ToUtc = toUtc
+                    }, cancellationToken)))
+            .WithName("GetAuditsByCorrelation")
+            .WithSummary("Получить события аудита по correlation id")
+            .WithDescription("Возвращает события аудита, связанные с указанным correlation id.")
+            .RequirePermission(AuditingPermissions.AuditTrails.View)
+            .Produces<IEnumerable<AuditSummaryDto>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden);
+    }
+}
