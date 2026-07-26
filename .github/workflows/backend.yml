@@ -74,24 +74,24 @@ jobs:
           restore-keys: ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: dotnet restore src/EDV.Starter.slnx
+        run: dotnet restore src/Edvantix.Modular.slnx
 
       - name: Build
-        run: dotnet build src/EDV.Starter.slnx -c Release --no-restore -warnaserror
+        run: dotnet build src/Edvantix.Modular.slnx -c Release --no-restore -warnaserror
 
       # Gate on DIRECT vulnerable packages (the ones we control). Transitive
       # advisories are surfaced but not blocking — they often can't be fixed
       # without an upstream bump.
       - name: Audit dependencies for known vulnerabilities
         run: |
-          if dotnet list src/EDV.Starter.slnx package --vulnerable 2>&1 | tee vuln-direct.txt | grep -q 'has the following vulnerable'; then
+          if dotnet list src/Edvantix.Modular.slnx package --vulnerable 2>&1 | tee vuln-direct.txt | grep -q 'has the following vulnerable'; then
             echo "::error::Direct package(s) with known vulnerabilities detected — see log."
             cat vuln-direct.txt
             exit 1
           fi
           echo "No direct vulnerable packages."
           echo "::group::Transitive advisories (informational)"
-          dotnet list src/EDV.Starter.slnx package --vulnerable --include-transitive 2>&1 | tee vuln-transitive.txt || true
+          dotnet list src/Edvantix.Modular.slnx package --vulnerable --include-transitive 2>&1 | tee vuln-transitive.txt || true
           echo "::endgroup::"
 
       - name: Run unit tests with coverage
@@ -143,7 +143,7 @@ jobs:
           restore-keys: ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: dotnet restore src/EDV.Starter.slnx
+        run: dotnet restore src/Edvantix.Modular.slnx
 
       # Integration tests build a host with WebApplicationFactory + Testcontainers.
       # Middleware tests live in a separate assembly (own process) because a 2nd
@@ -366,8 +366,8 @@ jobs:
 
       - name: Restore and Build with version
         run: |
-          dotnet restore src/EDV.Starter.slnx
-          dotnet build src/EDV.Starter.slnx -c Release --no-restore -p:Version=${{ steps.version.outputs.version }}
+          dotnet restore src/Edvantix.Modular.slnx
+          dotnet build src/Edvantix.Modular.slnx -c Release --no-restore -p:Version=${{ steps.version.outputs.version }}
 
       # Distribution model is source-ownership: consumers get the FULL source via the
       # `dotnet new edv` template (below), NOT per-module/BuildingBlocks NuGet packages.
@@ -376,12 +376,6 @@ jobs:
       # the locked source-ownership model, so they were removed.)
       - name: Pack CLI Tool
         run: dotnet pack src/Tools/CLI/EDV.CLI.csproj -c Release --no-build -o ./nupkgs -p:PackageVersion=${{ steps.version.outputs.version }}
-
-      # The dotnet new template package — the primary distribution artifact. Packs the
-      # repo (with its root .template.config) so consumers can `dotnet new install` then
-      # `dotnet new edv -n MyApp`. Scaffolded output is fully owned, detached source.
-      - name: Pack Template
-        run: dotnet pack templates/FullStackHero.NET.StarterKit.csproj -c Release -o ./nupkgs -p:PackageVersion=${{ steps.version.outputs.version }}
 
       - name: Push to NuGet.org
         run: dotnet nuget push "./nupkgs/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
