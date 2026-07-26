@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <RootNamespace>EDV.Starter.Api</RootNamespace>
+        <AssemblyName>EDV.Starter.Api</AssemblyName>
+        <IsPackable>false</IsPackable>
+        <ContainerPort>8080</ContainerPort>
+        <ContainerUser>1654</ContainerUser>
+        <ContainerFamily>noble</ContainerFamily>
+        <ContainerRepository>edv-api</ContainerRepository>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Mediator.Abstractions" />
+        <PackageReference Include="Mediator.SourceGenerator">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\BuildingBlocks\Web\Web.csproj" />
+        <ProjectReference Include="..\..\Modules\Auditing\Modules.Auditing.Contracts\Modules.Auditing.Contracts.csproj" />
+        <ProjectReference Include="..\..\Modules\Auditing\Modules.Auditing\Modules.Auditing.csproj" />
+        <ProjectReference Include="..\..\Modules\Identity\Modules.Identity\Modules.Identity.csproj" />
+        <ProjectReference Include="..\..\Modules\Multitenancy\Modules.Multitenancy\Modules.Multitenancy.csproj" />
+        <ProjectReference Include="..\EDV.Starter.Migrations.PostgreSQL\EDV.Starter.Migrations.PostgreSQL.csproj" />
+        <ProjectReference Include="..\..\Modules\Billing\Modules.Billing\Modules.Billing.csproj" />
+        <ProjectReference Include="..\..\Modules\Billing\Modules.Billing.Contracts\Modules.Billing.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

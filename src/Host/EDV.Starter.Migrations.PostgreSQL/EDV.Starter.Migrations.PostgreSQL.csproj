@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>EDV.Starter.Migrations.PostgreSQL</RootNamespace>
+        <AssemblyName>EDV.Starter.Migrations.PostgreSQL</AssemblyName>
+        <IsPackable>false</IsPackable>
+        <!-- Suppress analyzer warnings for EF Core auto-generated migration files -->
+        <NoWarn>$(NoWarn);CA1062;CA1861</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Audit\" />
+        <Folder Include="MultiTenancy\" />
+        <Folder Include="Tickets\" />
+        <Folder Include="Notifications\" />
+    </ItemGroup>
+    
+</Project>

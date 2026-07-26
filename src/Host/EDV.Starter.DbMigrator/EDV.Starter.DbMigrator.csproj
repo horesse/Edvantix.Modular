@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>EDV.Starter.DbMigrator</RootNamespace>
+        <AssemblyName>EDV.Starter.DbMigrator</AssemblyName>
+        <IsPackable>false</IsPackable>
+        <ContainerUser>1654</ContainerUser>
+        <ContainerFamily>noble</ContainerFamily>
+        <ContainerRepository>edv-db-migrator</ContainerRepository>
+        <NoWarn>$(NoWarn);CA1303</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Mediator.Abstractions" />
+        <PackageReference Include="Mediator.SourceGenerator">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\BuildingBlocks\Web\Web.csproj" />
+        <ProjectReference Include="..\..\Modules\Auditing\Modules.Auditing\Modules.Auditing.csproj" />
+        <ProjectReference Include="..\..\Modules\Auditing\Modules.Auditing.Contracts\Modules.Auditing.Contracts.csproj" />
+        <ProjectReference Include="..\..\Modules\Billing\Modules.Billing\Modules.Billing.csproj" />
+        <ProjectReference Include="..\..\Modules\Billing\Modules.Billing.Contracts\Modules.Billing.Contracts.csproj" />
+        <ProjectReference Include="..\..\Modules\Identity\Modules.Identity\Modules.Identity.csproj" />
+        <ProjectReference Include="..\..\Modules\Multitenancy\Modules.Multitenancy\Modules.Multitenancy.csproj" />
+        <ProjectReference Include="..\EDV.Starter.Migrations.PostgreSQL\EDV.Starter.Migrations.PostgreSQL.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="..\EDV.Starter.Api\appsettings.json"
+              Link="appsettings.json"
+              CopyToOutputDirectory="PreserveNewest" />
+        <None Include="..\EDV.Starter.Api\appsettings.Development.json"
+              Link="appsettings.Development.json"
+              CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>
