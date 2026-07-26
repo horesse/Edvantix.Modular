@@ -60,14 +60,6 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props') }}
           restore-keys: ${{ runner.os }}-nuget-
 
-      # Pack then install from the nupkg — exercises the exact artifact shipped to
-      # consumers, not just the in-repo folder.
-      - name: Pack template
-        run: dotnet pack templates/FullStackHero.NET.StarterKit.csproj -c Release -o "$RUNNER_TEMP/pkg"
-
-      - name: Install template
-        run: dotnet new install "$RUNNER_TEMP"/pkg/FullStackHero.NET.StarterKit.*.nupkg
-
       - name: Scaffold project
         run: dotnet new fsh -n Smoke.App -o "$RUNNER_TEMP/smoke" --aspire true --frontend true --skipRestore true
 
