@@ -44,4 +44,9 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Architecture.Tests/Architecture.Tests.csproj" />
+    <Project Path="Tests/Framework.Tests/Framework.Tests.csproj" />
+    <Project Path="Tests/Generic.Tests/Generic.Tests.csproj" />
+  </Folder>
 </Solution>

@@ -9,7 +9,7 @@ public static class Extensions
     /// Добавляет стандартный обработчик устойчивости (повторы, автоматический выключатель, таймаут) в построитель HTTP-клиента.
     /// Конфигурация считывается из секции "HttpResilienceOptions".
     /// </summary>
-    public static IHttpClientBuilder AddEdvResilience(this IHttpClientBuilder builder, IConfiguration configuration)
+    public static IHttpClientBuilder AddDefaultResilience(this IHttpClientBuilder builder, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(configuration);
